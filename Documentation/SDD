@@ -1,0 +1,743 @@
+# SOFTWARE DESIGN DOCUMENT (SDD)
+
+# CloudOps Assistant
+
+Version: 1.0
+
+Author: Tripti Pandey
+
+---
+
+# 1. Executive Summary
+
+CloudOps Assistant is a cloud governance and optimization platform that analyzes AWS infrastructure, identifies cost-saving opportunities, and automates operational workflows.
+
+The platform consists of:
+
+* React Dashboard
+* Chrome Extension
+* Node.js Backend
+* PostgreSQL Database
+* AWS Integration Layer
+* Jira Integration
+* Slack Integration
+* Terraform Recommendation Engine
+
+Primary Goal:
+
+Detect cloud resource waste and automate remediation workflows.
+
+---
+
+# 2. High-Level Architecture
+
+```
+                    ┌─────────────────┐
+                    │ Chrome Extension│
+                    └────────┬────────┘
+                             │
+                             ▼
+                ┌────────────────────────┐
+                │ React Frontend         │
+                └───────────┬────────────┘
+                            │
+                        HTTPS
+                            │
+                            ▼
+                ┌────────────────────────┐
+                │ Node.js API Gateway    │
+                └───────────┬────────────┘
+                            │
+    ┌───────────────────────┼──────────────────────┐
+    │                       │                      │
+    ▼                       ▼                      ▼
+```
+
+┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+│ PostgreSQL   │      │ AWS SDK      │      │ Notification │
+│ Database     │      │ Integration  │      │ Services     │
+└──────────────┘      └──────────────┘      └──────────────┘
+│
+┌──────────────┴──────────────┐
+│                             │
+▼                             ▼
+Slack Integration            Jira Integration
+
+---
+
+# 3. Folder Structure
+
+## Frontend (React)
+
+frontend/
+
+├── public/
+
+├── src/
+
+│   ├── assets/
+
+│   ├── components/
+
+│   │   ├── Dashboard/
+
+│   │   ├── Navbar/
+
+│   │   ├── Charts/
+
+│   │   ├── Findings/
+
+│   │   └── Reports/
+
+│   │
+
+│   ├── pages/
+
+│   │   ├── Login.jsx
+
+│   │   ├── Register.jsx
+
+│   │   ├── Dashboard.jsx
+
+│   │   ├── Findings.jsx
+
+│   │   ├── Reports.jsx
+
+│   │   └── Settings.jsx
+
+│   │
+
+│   ├── services/
+
+│   │   ├── api.js
+
+│   │   ├── auth.js
+
+│   │   └── scanner.js
+
+│   │
+
+│   ├── hooks/
+
+│   ├── context/
+
+│   ├── utils/
+
+│   └── App.jsx
+
+│
+
+├── package.json
+
+└── Dockerfile
+
+---
+
+## Backend (Node.js)
+
+backend/
+
+├── src/
+
+│
+
+├── config/
+
+│   ├── db.js
+
+│   ├── aws.js
+
+│   ├── jira.js
+
+│   └── slack.js
+
+│
+
+├── controllers/
+
+│   ├── authController.js
+
+│   ├── scanController.js
+
+│   ├── reportController.js
+
+│   ├── jiraController.js
+
+│   └── slackController.js
+
+│
+
+├── services/
+
+│   ├── ec2Scanner.js
+
+│   ├── ebsScanner.js
+
+│   ├── rdsScanner.js
+
+│   ├── savingsCalculator.js
+
+│   └── terraformGenerator.js
+
+│
+
+├── routes/
+
+│   ├── authRoutes.js
+
+│   ├── scanRoutes.js
+
+│   ├── reportRoutes.js
+
+│   └── integrationRoutes.js
+
+│
+
+├── middleware/
+
+│   ├── authMiddleware.js
+
+│   └── errorMiddleware.js
+
+│
+
+├── models/
+
+│   ├── User.js
+
+│   ├── AWSAccount.js
+
+│   ├── Scan.js
+
+│   ├── Finding.js
+
+│   └── Report.js
+
+│
+
+├── app.js
+
+└── Dockerfile
+
+---
+
+## Chrome Extension
+
+extension/
+
+├── manifest.json
+
+├── popup/
+
+│   ├── popup.html
+
+│   ├── popup.js
+
+│   └── popup.css
+
+│
+
+├── content/
+
+│   ├── awsConsoleScanner.js
+
+│
+
+├── background/
+
+│   ├── background.js
+
+│
+
+└── icons/
+
+---
+
+# 4. Database Design
+
+## ER Diagram
+
+Users
+
+│
+
+├── AWS_Accounts
+
+│
+
+├── Scans
+
+│
+
+├── Findings
+
+│
+
+├── Jira_Tickets
+
+│
+
+└── Slack_Notifications
+
+---
+
+Detailed Relationship
+
+Users (1) -------- (M) AWS_Accounts
+
+AWS_Accounts (1) -------- (M) Scans
+
+Scans (1) -------- (M) Findings
+
+Findings (1) -------- (1) Jira_Tickets
+
+Findings (1) -------- (M) Slack_Notifications
+
+---
+
+# 5. Database Schema
+
+## Users
+
+CREATE TABLE users (
+
+id UUID PRIMARY KEY,
+
+name VARCHAR(100),
+
+email VARCHAR(255) UNIQUE,
+
+password_hash TEXT,
+
+created_at TIMESTAMP
+
+);
+
+---
+
+## AWS Accounts
+
+CREATE TABLE aws_accounts (
+
+id UUID PRIMARY KEY,
+
+user_id UUID,
+
+account_name VARCHAR(100),
+
+access_key TEXT,
+
+secret_key TEXT,
+
+region VARCHAR(50),
+
+created_at TIMESTAMP
+
+);
+
+---
+
+## Scans
+
+CREATE TABLE scans (
+
+id UUID PRIMARY KEY,
+
+account_id UUID,
+
+scan_date TIMESTAMP,
+
+total_savings NUMERIC,
+
+created_at TIMESTAMP
+
+);
+
+---
+
+## Findings
+
+CREATE TABLE findings (
+
+id UUID PRIMARY KEY,
+
+scan_id UUID,
+
+resource_type VARCHAR(50),
+
+resource_id VARCHAR(255),
+
+issue_type VARCHAR(100),
+
+estimated_savings NUMERIC,
+
+status VARCHAR(50)
+
+);
+
+---
+
+## Jira Tickets
+
+CREATE TABLE jira_tickets (
+
+id UUID PRIMARY KEY,
+
+finding_id UUID,
+
+ticket_key VARCHAR(50),
+
+status VARCHAR(50)
+
+);
+
+---
+
+## Slack Notifications
+
+CREATE TABLE slack_notifications (
+
+id UUID PRIMARY KEY,
+
+finding_id UUID,
+
+channel_name VARCHAR(100),
+
+sent_at TIMESTAMP
+
+);
+
+---
+
+# 6. API Design
+
+Base URL
+
+/api/v1
+
+---
+
+Authentication APIs
+
+POST /auth/register
+
+Request
+
+{
+"name":"Tripti",
+"email":"[tripti@gmail.com](mailto:tripti@gmail.com)",
+"password":"password123"
+}
+
+Response
+
+{
+"message":"User registered successfully"
+}
+
+---
+
+POST /auth/login
+
+Request
+
+{
+"email":"[tripti@gmail.com](mailto:tripti@gmail.com)",
+"password":"password123"
+}
+
+Response
+
+{
+"token":"jwt_token"
+}
+
+---
+
+AWS Account APIs
+
+POST /aws/connect
+
+Request
+
+{
+"accessKey":"xxxx",
+"secretKey":"xxxx",
+"region":"ap-south-1"
+}
+
+Response
+
+{
+"message":"AWS account connected"
+}
+
+---
+
+GET /aws/accounts
+
+Returns connected AWS accounts.
+
+---
+
+Scanner APIs
+
+POST /scanner/run
+
+Runs AWS scan.
+
+Response
+
+{
+"scanId":"123"
+}
+
+---
+
+GET /scanner/:scanId/results
+
+Returns findings.
+
+Response
+
+{
+"id":"scan123",
+"findings":[]
+}
+
+---
+
+Dashboard APIs
+
+GET /dashboard/summary
+
+Response
+
+{
+"idleEC2":4,
+"unusedEBS":3,
+"oldSnapshots":5,
+"savings":120
+}
+
+---
+
+Reports APIs
+
+GET /reports
+
+GET /reports/:id
+
+POST /reports/generate
+
+---
+
+Terraform APIs
+
+POST /terraform/generate
+
+Request
+
+{
+"findingId":"123"
+}
+
+Response
+
+{
+"hcl":"instance_type = t3.micro"
+}
+
+---
+
+Slack APIs
+
+POST /slack/connect
+
+POST /slack/send-alert
+
+---
+
+Jira APIs
+
+POST /jira/connect
+
+POST /jira/create-ticket
+
+---
+
+# 7. Scanner Workflow
+
+Step 1
+
+User initiates scan.
+
+↓
+
+Step 2
+
+Backend retrieves AWS credentials.
+
+↓
+
+Step 3
+
+AWS SDK queries:
+
+* EC2
+* EBS
+* RDS
+* CloudWatch
+
+↓
+
+Step 4
+
+Optimization engine processes findings.
+
+↓
+
+Step 5
+
+Potential savings calculated.
+
+↓
+
+Step 6
+
+Results stored in PostgreSQL.
+
+↓
+
+Step 7
+
+Dashboard updated.
+
+---
+
+# 8. Security Design
+
+Authentication
+
+* JWT Access Tokens
+
+Authorization
+
+* Route-level middleware
+
+Encryption
+
+* AWS credentials encrypted before storage
+
+Validation
+
+* Joi/Zod request validation
+
+Rate Limiting
+
+* Express rate limiter
+
+Helmet
+
+* Secure HTTP headers
+
+---
+
+# 9. Docker Architecture
+
+docker-compose.yml
+
+Services
+
+1. Frontend
+
+Port 3000
+
+2. Backend
+
+Port 5000
+
+3. PostgreSQL
+
+Port 5432
+
+---
+
+# 10. CI/CD Pipeline
+
+GitHub Push
+
+↓
+
+Run ESLint
+
+↓
+
+Run Tests
+
+↓
+
+Build Frontend
+
+↓
+
+Build Backend
+
+↓
+
+Build Docker Images
+
+↓
+
+Push Docker Images
+
+↓
+
+Deploy to AWS
+
+---
+
+# 11. AWS Infrastructure
+
+Terraform Managed Resources
+
+* VPC
+* EC2
+* Security Groups
+* RDS PostgreSQL
+* IAM Roles
+* CloudWatch
+* S3
+
+---
+
+# 12. Future Enhancements
+
+Phase 2
+
+* AI-based recommendations
+* Kubernetes optimization
+* Multi-cloud support
+
+Phase 3
+
+* Azure support
+* GCP support
+* Automated remediation
+
+Phase 4
+
+* FinOps analytics
+* Executive dashboards
+* Team collaboration features
+
+---
+
+# Success Criteria
+
+* Detect cloud waste accurately
+* Generate actionable recommendations
+* Reduce manual cloud governance effort
+* Demonstrate Full Stack + DevOps expertise
+* Production deployment on AWS
+* CI/CD automation implemented
