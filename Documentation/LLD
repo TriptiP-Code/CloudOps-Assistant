@@ -1,0 +1,947 @@
+# LOW LEVEL DESIGN (LLD)
+
+# CloudOps Assistant
+
+Version: 1.0
+
+---
+
+# 1. Service Breakdown
+
+CloudOps Assistant consists of six major services.
+
+1. Authentication Service
+2. AWS Scanner Service
+3. Cost Optimization Service
+4. Notification Service
+5. Terraform Recommendation Engine
+6. Chrome Extension Service
+
+---
+
+# 2. AWS Scanner Design
+
+## EC2 Scanner
+
+Purpose:
+
+Identify:
+
+* Stopped Instances
+* Underutilized Instances
+* Oversized Instances
+
+AWS SDK Calls
+
+### Describe Instances
+
+```javascript
+DescribeInstancesCommand
+```
+
+Data Retrieved
+
+* InstanceId
+* InstanceType
+* State
+* LaunchTime
+* Tags
+
+---
+
+### CloudWatch CPU Metrics
+
+```javascript
+GetMetricStatisticsCommand
+```
+
+Metrics:
+
+* CPUUtilization
+
+Period:
+
+14 Days
+
+---
+
+Optimization Rule
+
+IF
+
+Average CPU < 5%
+
+AND
+
+Running > 14 Days
+
+THEN
+
+Flag as Underutilized
+
+---
+
+Savings Formula
+
+Monthly Savings
+
+=
+
+Current Instance Cost
+
+*
+
+Recommended Instance Cost
+
+---
+
+# 3. EBS Scanner
+
+AWS SDK Calls
+
+### Describe Volumes
+
+```javascript
+DescribeVolumesCommand
+```
+
+Data
+
+* VolumeId
+* Size
+* State
+
+---
+
+Optimization Rule
+
+IF
+
+Volume State = available
+
+THEN
+
+Unused EBS
+
+---
+
+Savings Calculation
+
+Volume Size × Storage Cost
+
+---
+
+# 4. Snapshot Scanner
+
+AWS SDK Calls
+
+### Describe Snapshots
+
+```javascript
+DescribeSnapshotsCommand
+```
+
+Data
+
+* SnapshotId
+* StartTime
+* VolumeSize
+
+---
+
+Optimization Rule
+
+IF
+
+Snapshot Age > 90 Days
+
+THEN
+
+Flag
+
+---
+
+# 5. RDS Scanner
+
+AWS SDK Calls
+
+### Describe DB Instances
+
+```javascript
+DescribeDBInstancesCommand
+```
+
+---
+
+CloudWatch Metrics
+
+```javascript
+GetMetricStatisticsCommand
+```
+
+Metrics
+
+* CPUUtilization
+* FreeStorageSpace
+* DatabaseConnections
+
+---
+
+Optimization Rule
+
+Average CPU < 10%
+
+for 30 days
+
+↓
+
+Recommend Downgrade
+
+---
+
+# 6. Cost Explorer Integration
+
+AWS SDK Call
+
+```javascript
+GetCostAndUsageCommand
+```
+
+Purpose
+
+Retrieve:
+
+* EC2 Cost
+* EBS Cost
+* RDS Cost
+
+Date Range
+
+Last 30 Days
+
+---
+
+# 7. Optimization Engine
+
+Input
+
+AWS Resource Data
+
+↓
+
+Rules Engine
+
+↓
+
+Savings Calculator
+
+↓
+
+Recommendation Generator
+
+↓
+
+Database Storage
+
+---
+
+Optimization Object
+
+```json
+{
+  "resourceId": "i-12345",
+  "issue": "Underutilized Instance",
+  "currentType": "t3.large",
+  "recommendedType": "t3.micro",
+  "monthlySavings": 42
+}
+```
+
+---
+
+# 8. Sequence Diagram
+
+AWS Scan Workflow
+
+User
+
+↓
+
+Dashboard
+
+↓
+
+API
+
+↓
+
+AWS Scanner
+
+↓
+
+AWS SDK
+
+↓
+
+PostgreSQL
+
+↓
+
+Dashboard
+
+Sequence
+
+1 User clicks Scan
+
+↓
+
+2 API receives request
+
+↓
+
+3 AWS Scanner starts
+
+↓
+
+4 AWS SDK fetches resources
+
+↓
+
+5 Optimization Engine processes
+
+↓
+
+6 Findings stored
+
+↓
+
+7 Dashboard updated
+
+---
+
+Detailed Sequence
+
+```text
+User
+
+|
+
+v
+
+React Dashboard
+
+|
+
+POST /scanner/run
+
+|
+
+v
+
+Node API
+
+|
+
+v
+
+AWS Scanner Service
+
+|
+
+v
+
+AWS SDK
+
+|
+
+v
+
+EC2
+
+EBS
+
+RDS
+
+CloudWatch
+
+|
+
+v
+
+Optimization Engine
+
+|
+
+v
+
+PostgreSQL
+
+|
+
+v
+
+API Response
+
+|
+
+v
+
+Dashboard
+```
+
+---
+
+# 9. JWT Authentication Flow
+
+Login Request
+
+↓
+
+Backend Validation
+
+↓
+
+Password Verification
+
+↓
+
+JWT Generation
+
+↓
+
+Client Storage
+
+↓
+
+Authorized Requests
+
+---
+
+JWT Payload
+
+```json
+{
+  "userId": "uuid",
+  "email": "user@example.com",
+  "role": "user"
+}
+```
+
+---
+
+Authentication Middleware
+
+```javascript
+Authorization: Bearer <token>
+```
+
+Process
+
+1 Extract Token
+
+↓
+
+2 Verify Signature
+
+↓
+
+3 Decode Payload
+
+↓
+
+4 Attach User
+
+↓
+
+5 Continue Request
+
+---
+
+Token Lifetime
+
+Access Token
+
+24 Hours
+
+Refresh Token
+
+7 Days
+
+(Optional Future Feature)
+
+---
+
+# 10. React Component Hierarchy
+
+```text
+App
+
+|
+
+├── AuthProvider
+
+|
+
+├── Router
+
+|
+
+├── LoginPage
+
+├── RegisterPage
+
+|
+
+└── DashboardLayout
+
+|
+
+├── Navbar
+
+├── Sidebar
+
+|
+
+├── DashboardPage
+
+│   ├── SummaryCards
+
+│   ├── CostChart
+
+│   ├── FindingsTable
+
+│
+
+├── FindingsPage
+
+│   ├── FindingCard
+
+│   ├── RecommendationPanel
+
+│
+
+├── ReportsPage
+
+│   ├── ReportList
+
+│   ├── ReportViewer
+
+│
+
+├── IntegrationsPage
+
+│   ├── SlackSettings
+
+│   ├── JiraSettings
+
+│
+
+└── SettingsPage
+```
+
+---
+
+# 11. PostgreSQL Index Design
+
+Users
+
+```sql
+CREATE UNIQUE INDEX idx_users_email
+ON users(email);
+```
+
+Reason
+
+Fast Login
+
+---
+
+AWS Accounts
+
+```sql
+CREATE INDEX idx_accounts_user
+ON aws_accounts(user_id);
+```
+
+Reason
+
+User Account Lookup
+
+---
+
+Scans
+
+```sql
+CREATE INDEX idx_scans_account
+ON scans(account_id);
+```
+
+---
+
+Findings
+
+```sql
+CREATE INDEX idx_findings_scan
+ON findings(scan_id);
+```
+
+---
+
+Issue Search
+
+```sql
+CREATE INDEX idx_issue_type
+ON findings(issue_type);
+```
+
+---
+
+Resource Search
+
+```sql
+CREATE INDEX idx_resource_id
+ON findings(resource_id);
+```
+
+---
+
+# 12. Terraform Recommendation Engine
+
+Input
+
+```json
+{
+ "instanceType":"t3.large",
+ "cpuAverage":"2%"
+}
+```
+
+Rule
+
+IF
+
+CPU < 5%
+
+↓
+
+Recommend Smaller Instance
+
+Output
+
+```hcl
+resource "aws_instance" "app" {
+
+instance_type = "t3.micro"
+
+}
+```
+
+---
+
+Generator Workflow
+
+Finding
+
+↓
+
+Rule Engine
+
+↓
+
+Terraform Template
+
+↓
+
+HCL Output
+
+↓
+
+Dashboard Display
+
+---
+
+# 13. Slack Integration Workflow
+
+Configuration
+
+User
+
+↓
+
+Slack OAuth
+
+↓
+
+Store Workspace Details
+
+↓
+
+Save Webhook URL
+
+---
+
+Notification Workflow
+
+Finding Generated
+
+↓
+
+Notification Service
+
+↓
+
+Slack Formatter
+
+↓
+
+Slack API
+
+↓
+
+Channel Message
+
+Payload
+
+```json
+{
+ "text":"Idle EC2 Found. Potential Savings $25/month"
+}
+```
+
+---
+
+# 14. Jira Integration Workflow
+
+Configuration
+
+User
+
+↓
+
+Connect Jira
+
+↓
+
+Store API Token
+
+↓
+
+Store Project Key
+
+---
+
+Ticket Workflow
+
+Finding
+
+↓
+
+Ticket Generator
+
+↓
+
+Jira API
+
+↓
+
+Issue Creation
+
+↓
+
+Ticket Stored
+
+Example Payload
+
+```json
+{
+ "project":{
+   "key":"DEV"
+ },
+ "summary":"Optimize EC2 Instance",
+ "issuetype":{
+   "name":"Task"
+ }
+}
+```
+
+---
+
+# 15. Chrome Extension Architecture
+
+Manifest V3
+
+```json
+{
+ "manifest_version":3
+}
+```
+
+Modules
+
+```text
+Popup UI
+
+↓
+
+Background Service Worker
+
+↓
+
+Content Script
+
+↓
+
+Backend API
+```
+
+---
+
+Extension Workflow
+
+User Opens AWS Console
+
+↓
+
+Content Script Executes
+
+↓
+
+Detect AWS Resource Page
+
+↓
+
+Fetch Findings
+
+↓
+
+Inject Optimization Banner
+
+Example
+
+```text
+CloudOps Assistant
+
+Idle Instances Found: 3
+
+Potential Savings: $65/month
+```
+
+---
+
+# 16. Docker Deployment Architecture
+
+```text
+Nginx
+
+|
+
+├── React Container
+
+|
+
+├── Node API Container
+
+|
+
+└── PostgreSQL Container
+```
+
+Docker Compose
+
+```yaml
+frontend
+
+backend
+
+postgres
+```
+
+---
+
+# 17. GitHub Actions Workflow
+
+Push
+
+↓
+
+Lint
+
+↓
+
+Unit Tests
+
+↓
+
+Build Frontend
+
+↓
+
+Build Backend
+
+↓
+
+Build Docker Images
+
+↓
+
+Push to Registry
+
+↓
+
+Deploy AWS EC2
+
+---
+
+# 18. Monitoring Strategy
+
+CloudWatch
+
+* API Errors
+* CPU Usage
+* Memory Usage
+
+Application Logs
+
+* Winston Logger
+
+Health Endpoint
+
+```http
+GET /health
+```
+
+Response
+
+```json
+{
+ "status":"UP"
+}
+```
+
+---
+
+# 19. Future Microservice Split
+
+Current
+
+Monolith
+
+Future
+
+```text
+Auth Service
+
+Scanner Service
+
+Notification Service
+
+Terraform Service
+
+Reporting Service
+```
+
+Communicate via
+
+* REST
+* RabbitMQ
+* AWS SQS
