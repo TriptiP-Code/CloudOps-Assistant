@@ -1,0 +1,565 @@
+# CloudOps Assistant
+
+## Intelligent AWS Resource Optimization & Cost Governance Platform
+
+### Project Overview
+
+CloudOps Assistant is a Full Stack Cloud Management Platform designed to help DevOps engineers, cloud administrators, and organizations identify cloud resource waste, optimize infrastructure costs, and automate remediation workflows.
+
+The platform combines a React-based web dashboard, Chrome Extension, AWS SDK integrations, Terraform recommendation engine, Slack/Jira automation, and DevOps best practices to provide actionable insights into AWS infrastructure.
+
+Unlike traditional cloud monitoring solutions that only report usage and costs, CloudOps Assistant focuses on identifying optimization opportunities and generating actionable remediation recommendations.
+
+---
+
+# Problem Statement
+
+Organizations often waste cloud resources due to:
+
+* Idle EC2 instances
+* Unattached EBS volumes
+* Orphaned snapshots
+* Underutilized RDS databases
+* Oversized infrastructure
+* Lack of governance visibility
+
+While AWS provides Cost Explorer and Trusted Advisor, organizations still struggle with:
+
+* Operational follow-up
+* Team accountability
+* Workflow automation
+* Infrastructure-as-Code remediation
+
+CloudOps Assistant aims to bridge this gap.
+
+---
+
+# Objectives
+
+1. Scan AWS environments.
+2. Detect underutilized resources.
+3. Estimate potential monthly savings.
+4. Generate Terraform remediation recommendations.
+5. Create Jira tickets automatically.
+6. Send Slack alerts.
+7. Maintain optimization history.
+8. Provide browser-based AWS insights through a Chrome Extension.
+
+---
+
+# Target Users
+
+* DevOps Engineers
+* Cloud Engineers
+* Platform Engineers
+* Site Reliability Engineers
+* Cloud Administrators
+* Startups managing AWS infrastructure
+
+---
+
+# Core Features
+
+## Feature 1: AWS Account Integration
+
+Users connect AWS accounts securely through IAM credentials.
+
+Capabilities:
+
+* Multi-account support
+* Credential validation
+* Role-based access
+
+---
+
+## Feature 2: Resource Scanner
+
+Scans AWS resources periodically.
+
+### EC2 Analysis
+
+Detect:
+
+* Stopped instances
+* Low CPU utilization
+* Oversized instances
+
+### EBS Analysis
+
+Detect:
+
+* Unattached volumes
+* Unused storage
+
+### Snapshot Analysis
+
+Detect:
+
+* Old snapshots
+* Duplicate backups
+
+### RDS Analysis
+
+Detect:
+
+* Low-utilization databases
+* Overprovisioned storage
+
+---
+
+## Feature 3: Cost Optimization Engine
+
+Calculates:
+
+* Estimated monthly waste
+* Estimated annual waste
+* Potential savings
+
+Example:
+
+Idle EC2:
+$40/month
+
+Unused EBS:
+$25/month
+
+Old Snapshots:
+$10/month
+
+Total Savings:
+$75/month
+
+---
+
+## Feature 4: Optimization Dashboard
+
+Displays:
+
+* Resource health
+* Cost trends
+* Optimization recommendations
+* Historical scan reports
+
+---
+
+## Feature 5: Terraform Recommendation Engine
+
+Generates Infrastructure as Code recommendations.
+
+Example:
+
+Current:
+
+instance_type = "t3.large"
+
+Recommended:
+
+instance_type = "t3.micro"
+
+Potential Savings:
+$42/month
+
+---
+
+## Feature 6: Slack Integration
+
+Automatically sends alerts.
+
+Example:
+
+CloudOps Alert
+
+Idle EC2 detected
+
+Instance:
+production-api-server
+
+Potential Savings:
+$25/month
+
+---
+
+## Feature 7: Jira Automation
+
+Creates tickets automatically.
+
+Example:
+
+Title:
+Optimize Idle EC2 Instance
+
+Description:
+CPU utilization below 5% for 14 days.
+Potential monthly savings: $25.
+
+---
+
+## Feature 8: Chrome Extension
+
+Works directly inside AWS Console.
+
+Displays:
+
+* Current findings
+* Potential savings
+* Quick access to reports
+
+Without leaving AWS Console.
+
+---
+
+# System Architecture
+
+```
+                 +--------------------+
+                 | Chrome Extension   |
+                 +---------+----------+
+                           |
+                           |
+                 +---------v----------+
+                 | React Frontend     |
+                 +---------+----------+
+                           |
+                     REST APIs
+                           |
+                 +---------v----------+
+                 | Node.js Backend    |
+                 +---------+----------+
+                           |
+    -------------------------------------------------
+    |              |               |               |
+    |              |               |               |
+```
+
++-------v-----+ +------v------+ +------v------+ +------v------+
+| PostgreSQL  | | AWS SDK     | | Jira API   | | Slack API  |
++-------------+ +-------------+ +-------------+ +------------+
+|
++---------v----------+
+| Terraform Engine   |
++--------------------+
+
+---
+
+# Technology Stack
+
+## Frontend
+
+* React.js
+* Tailwind CSS
+* React Router
+* Axios
+* Recharts
+
+## Backend
+
+* Node.js
+* Express.js
+* JWT Authentication
+* AWS SDK v3
+
+## Database
+
+* PostgreSQL
+
+## Cloud
+
+* AWS EC2
+* AWS IAM
+* AWS Cost Explorer
+* AWS CloudWatch
+
+## DevOps
+
+* Docker
+* Docker Compose
+* Terraform
+* GitHub Actions
+
+## Integrations
+
+* Jira API
+* Slack API
+
+---
+
+# Database Design
+
+## Users
+
+* id
+* name
+* email
+* password_hash
+* created_at
+
+## AWS Accounts
+
+* id
+* user_id
+* account_name
+* access_key
+* secret_key_encrypted
+* region
+
+## Scans
+
+* id
+* account_id
+* scan_date
+* total_savings
+
+## Findings
+
+* id
+* scan_id
+* resource_type
+* resource_id
+* issue_type
+* estimated_savings
+
+## Jira Tickets
+
+* id
+* finding_id
+* ticket_key
+* status
+
+## Slack Notifications
+
+* id
+* finding_id
+* channel_name
+* notification_time
+
+---
+
+# Phase Wise Development Plan
+
+## Phase 1 - MVP
+
+Duration: 2 Weeks
+
+Frontend
+
+* Login
+* Register
+* Dashboard
+* AWS Account Connection
+
+Backend
+
+* Authentication APIs
+* AWS Credential Validation
+* Scanner APIs
+
+Database
+
+* Users
+* AWS Accounts
+
+Deliverable
+
+Working cloud scanner.
+
+---
+
+## Phase 2 - Cost Optimization
+
+Duration: 1 Week
+
+Frontend
+
+* Savings Dashboard
+
+Backend
+
+* Cost Calculation Service
+
+Database
+
+* Findings
+* Savings Reports
+
+Deliverable
+
+Cost optimization engine.
+
+---
+
+## Phase 3 - Historical Tracking
+
+Duration: 1 Week
+
+Frontend
+
+* History Page
+* Comparison Reports
+
+Backend
+
+* Historical Analytics
+
+Database
+
+* Scan History
+
+Deliverable
+
+Optimization tracking.
+
+---
+
+## Phase 4 - Slack Integration
+
+Duration: 1 Week
+
+Frontend
+
+* Slack Settings
+
+Backend
+
+* Slack Webhooks
+
+Deliverable
+
+Automated notifications.
+
+---
+
+## Phase 5 - Jira Integration
+
+Duration: 1 Week
+
+Frontend
+
+* Jira Configuration
+
+Backend
+
+* Ticket Creation Service
+
+Deliverable
+
+Workflow automation.
+
+---
+
+## Phase 6 - Terraform Recommendation Engine
+
+Duration: 2 Weeks
+
+Frontend
+
+* Terraform Recommendation View
+
+Backend
+
+* Resource Analysis Engine
+* Terraform Generator
+
+Deliverable
+
+Infrastructure recommendations.
+
+---
+
+## Phase 7 - Chrome Extension
+
+Duration: 2 Weeks
+
+Frontend
+
+* Manifest V3
+* Popup UI
+
+Backend
+
+* Extension APIs
+
+Deliverable
+
+AWS Console Integration.
+
+---
+
+## Phase 8 - DevOps & Deployment
+
+Duration: 1 Week
+
+Docker
+
+* Frontend Container
+* Backend Container
+* PostgreSQL Container
+
+GitHub Actions
+
+* Build
+* Test
+* Deploy
+
+Terraform
+
+* Infrastructure Provisioning
+
+AWS
+
+* Production Deployment
+
+Deliverable
+
+Production-ready platform.
+
+---
+
+# Expected Learning Outcomes
+
+Frontend
+
+* React
+* Browser Extensions
+* Dashboard Design
+
+Backend
+
+* Node.js
+* REST APIs
+* Authentication
+
+Database
+
+* PostgreSQL
+* Query Optimization
+
+Cloud
+
+* AWS SDK
+* Cost Explorer
+* CloudWatch
+
+DevOps
+
+* Docker
+* Terraform
+* GitHub Actions
+* CI/CD Pipelines
+
+Integrations
+
+* Slack APIs
+* Jira APIs
+
+---
+
+# Future Enhancements
+
+* AI-powered optimization recommendations
+* Kubernetes support
+* Azure support
+* GCP support
+* Multi-cloud governance
+* FinOps reporting
+* Executive dashboards
+* Automated remediation workflows
