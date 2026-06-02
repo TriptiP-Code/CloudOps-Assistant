@@ -6,4 +6,12 @@ const ProtectedRoute = ({ children }) => {
   return token ? children : <Navigate to="/login" />;
 };
 
+// router.get(
+//   "/profile",
+//   authMiddleware,
+//   (req, res) => {
+//     res.json(req.user);
+//   }
+// );
+
 export default ProtectedRoute;
