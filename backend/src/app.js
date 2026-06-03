@@ -31,6 +31,7 @@ const helmet = require("helmet");
 
 const authRoutes = require("./routes/authRoutes");
 const awsRoutes = require("./routes/awsRoutes");
+const scannerRoutes = require("./routes/scannerRoutes");
 
 const app = express();
 
@@ -45,6 +46,11 @@ app.use(express.json());
 
 // Parse Form Data
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  "/api/v1/scanner",
+  scannerRoutes
+);
 
 // Debug Middleware
 app.use((req, res, next) => {

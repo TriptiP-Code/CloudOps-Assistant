@@ -16,6 +16,10 @@ const authMiddleware = require(
 );
 
 const {
+  runScan,
+} = require("../controllers/scannerController");
+
+const {
   connectAWS,
   getAWSAccounts,
 } = require("../controllers/awsController");
@@ -30,6 +34,12 @@ router.get(
   "/accounts",
   authMiddleware,
   getAWSAccounts
+);
+
+router.get(
+  "/scan/:accountId",
+  authMiddleware,
+  runScan
 );
 
 module.exports = router;

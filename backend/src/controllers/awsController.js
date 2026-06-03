@@ -118,28 +118,31 @@ const connectAWS = async (req, res) => {
       Save Account
     */
 
-    const result = await pool.query(
-      `
-      INSERT INTO aws_accounts
-      (
-        user_id,
-        account_name,
-        access_key,
-        secret_key,
-        region
-      )
-      VALUES ($1,$2,$3,$4,$5)
-      RETURNING *
-      `,
-      [
-        userId,
-        accountName,
-        accessKey,
-        secretKey,
-        region,
-      ]
-    );
-
+const result = await pool.query(
+  `
+  INSERT INTO aws_accounts
+  (
+    user_id,
+    account_name,
+    access_key,
+    secret_key,
+    region,
+    account_id,
+    arn
+  )
+  VALUES ($1,$2,$3,$4,$5,$6,$7)
+  RETURNING *
+  `,
+  [
+    userId,
+    accountName,
+    accessKey,
+    secretKey,
+    region,
+    validation.accountId,
+    validation.arn,
+  ]
+);
     res.status(201).json({
       success: true,
       message:
