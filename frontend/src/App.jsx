@@ -12,6 +12,9 @@ import { Navigate } from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import Findings from "./pages/Findings";
+import ScanHistory from "./pages/ScanHistory";
+
 function App() {
   return (
     <BrowserRouter>
@@ -46,6 +49,23 @@ function App() {
         <Route
   path="*"
   element={<Navigate to="/login" replace />}
+/>
+
+<Route
+  path="/findings"
+  element={
+    <ProtectedRoute>
+      <Findings />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/scans"
+  element={
+    <ProtectedRoute>
+      <ScanHistory />
+    </ProtectedRoute>
+  }
 />
       </Routes>
     </BrowserRouter>

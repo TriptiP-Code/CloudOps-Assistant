@@ -47,6 +47,18 @@ const Sidebar = () => {
         >
           AWS Accounts
         </Link>
+        <Link
+          to="/findings"
+          className="px-4 py-3 rounded-lg hover:bg-slate-800 transition"
+        >
+          Findings
+        </Link>
+        <Link
+          to="/scans"
+          className="px-4 py-3 rounded-lg hover:bg-slate-800 transition"
+        >
+          Scan History
+        </Link>
 
       </nav>
     </aside>

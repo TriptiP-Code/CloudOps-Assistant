@@ -24,6 +24,16 @@ const {
   getAWSAccounts,
 } = require("../controllers/awsController");
 
+const {
+  getFindings,
+} = require("../controllers/findingsController");
+
+const {
+  getScanHistory,
+} = require(
+  "../controllers/scanHistoryController"
+);
+
 router.post(
   "/connect",
   authMiddleware,
@@ -40,6 +50,18 @@ router.get(
   "/scan/:accountId",
   authMiddleware,
   runScan
+);
+
+router.get(
+  "/findings",
+  authMiddleware,
+  getFindings
+);
+
+router.get(
+  "/scans",
+  authMiddleware,
+  getScanHistory
 );
 
 module.exports = router;
