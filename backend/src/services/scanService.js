@@ -17,6 +17,13 @@ const createFinding = async (
   scanId,
   instance
 ) => {
+
+  const idle =
+    instance.state === "stopped";
+
+  const monthlySavings =
+    idle ? 8.00 : 0;
+
   const result = await pool.query(
     `
     INSERT INTO findings
@@ -25,9 +32,11 @@ const createFinding = async (
       resource_type,
       resource_id,
       state,
-      instance_type
+      instance_type,
+      idle,
+      monthly_savings
     )
-    VALUES($1,$2,$3,$4,$5)
+    VALUES($1,$2,$3,$4,$5,$6,$7)
     RETURNING *
     `,
     [
@@ -36,6 +45,8 @@ const createFinding = async (
       instance.instanceId,
       instance.state,
       instance.instanceType,
+      idle,
+      monthlySavings,
     ]
   );
 
