@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
 
+
 const IdleResources = () => {
   const [resources, setResources] =
     useState([]);
@@ -18,6 +19,7 @@ const IdleResources = () => {
   useEffect(() => {
     fetchResources();
   }, []);
+
 
   const fetchResources =
     async () => {

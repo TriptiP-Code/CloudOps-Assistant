@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
+
 
 const AWSAccounts = () => {
   const [accounts, setAccounts] = useState([]);
@@ -13,6 +15,7 @@ const AWSAccounts = () => {
     secretKey: "",
     region: "ap-south-1",
   });
+  const navigate = useNavigate();
 
   const fetchAccounts = async () => {
     try {
@@ -100,6 +103,12 @@ const AWSAccounts = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
+      <button
+  onClick={() => navigate("/dashboard")}
+  className="mb-6 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg"
+>
+  ← Dashboard
+</button>
 
       <h1 className="text-4xl font-bold mb-8">
         AWS Accounts
