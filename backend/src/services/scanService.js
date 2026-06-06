@@ -13,6 +13,10 @@ const createScan = async (accountId) => {
   return result.rows[0];
 };
 
+const {
+  sendSlackAlert,
+} = require("./slackService");
+
 const createFinding = async (
   scanId,
   instance
@@ -23,6 +27,18 @@ const createFinding = async (
 
   const monthlySavings =
     idle ? 8.00 : 0;
+
+if (idle) {
+  await sendSlackAlert(
+    `🚨 Idle EC2 Detected
+
+Instance: ${instance.instanceId}
+Type: ${instance.instanceType}
+State: ${instance.state}
+
+Potential Monthly Savings: $${monthlySavings}`
+  );
+}
 
   const result = await pool.query(
     `

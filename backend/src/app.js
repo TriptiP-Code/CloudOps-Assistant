@@ -34,6 +34,8 @@ const awsRoutes = require("./routes/awsRoutes");
 const scannerRoutes = require("./routes/scannerRoutes");
 const dashboardRoutes =
   require("./routes/dashboardRoutes");
+const slackRoutes =
+  require("./routes/slackRoutes");
 
 const app = express();
 
@@ -81,6 +83,10 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/aws", awsRoutes);
+app.use(
+  "/api/v1/slack",
+  slackRoutes
+);
 
 // 404 Handler
 app.use((req, res) => {
