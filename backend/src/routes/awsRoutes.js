@@ -34,6 +34,12 @@ const {
   "../controllers/scanHistoryController"
 );
 
+const {
+  getIdleResources,
+} = require(
+  "../controllers/idleController"
+);
+
 router.post(
   "/connect",
   authMiddleware,
@@ -62,6 +68,12 @@ router.get(
   "/scans",
   authMiddleware,
   getScanHistory
+);
+
+router.get(
+  "/idle-resources",
+  authMiddleware,
+  getIdleResources
 );
 
 module.exports = router;

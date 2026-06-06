@@ -32,6 +32,8 @@ const helmet = require("helmet");
 const authRoutes = require("./routes/authRoutes");
 const awsRoutes = require("./routes/awsRoutes");
 const scannerRoutes = require("./routes/scannerRoutes");
+const dashboardRoutes =
+  require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -50,6 +52,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   "/api/v1/scanner",
   scannerRoutes
+);
+
+app.use(
+  "/api/v1/dashboard",
+  dashboardRoutes
 );
 
 // Debug Middleware

@@ -59,6 +59,12 @@ const Sidebar = () => {
         >
           Scan History
         </Link>
+        <Link
+          to="/idle-resources"
+          className="px-4 py-3 rounded-lg hover:bg-slate-800 transition"
+        >
+          Idle Resources
+        </Link>
 
       </nav>
     </aside>

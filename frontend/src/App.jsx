@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import Findings from "./pages/Findings";
 import ScanHistory from "./pages/ScanHistory";
+import IdleResources from "./pages/IdleResources";
 
 function App() {
   return (
@@ -64,6 +65,14 @@ function App() {
   element={
     <ProtectedRoute>
       <ScanHistory />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/idle-resources"
+  element={
+    <ProtectedRoute>
+      <IdleResources />
     </ProtectedRoute>
   }
 />
