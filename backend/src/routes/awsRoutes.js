@@ -40,6 +40,20 @@ const {
   "../controllers/idleController"
 );
 
+const {
+  deleteAllFindings,
+  deleteAllScans,
+} = require(
+  "../controllers/cleanupController"
+);
+
+const {
+  cleanupScans,
+  deleteLatestScan,
+} = require(
+  "../controllers/cleanupController"
+);
+
 router.post(
   "/connect",
   authMiddleware,
@@ -74,6 +88,28 @@ router.get(
   "/idle-resources",
   authMiddleware,
   getIdleResources
+);
+
+router.delete(
+  "/findings",
+  authMiddleware,
+  deleteAllFindings
+);
+
+router.delete(
+  "/scans",
+  authMiddleware,
+  deleteAllScans
+);
+
+router.delete(
+  "/scans/cleanup/latest",
+  deleteLatestScan
+);
+
+router.delete(
+  "/scans/cleanup/:period",
+  cleanupScans
 );
 
 module.exports = router;
