@@ -28,34 +28,57 @@ The platform also supports historical scan tracking, findings management, cleanu
 
 <img width="1917" height="966" alt="image" src="https://github.com/user-attachments/assets/a6e1ac58-08bc-45ff-af01-f971f5f0fd3a" />
 
-Dashboard 
+## Dashboard 
+
+
 
 <img width="1917" height="973" alt="image" src="https://github.com/user-attachments/assets/5a4bc796-00ba-4659-a1fa-903238e31d5e" />
 
-AWS Console - As it can be seen that there is one idle instance in the aws account 
+
+## AWS Console - As it can be seen that there is one idle instance in the aws account 
+
+
 
 <img width="1919" height="941" alt="image" src="https://github.com/user-attachments/assets/d534b0e6-ee78-4a24-9fd7-a1aeb2e0fa23" />
 
-Adding AWS Account
+## Adding AWS Account
+
+
 
 <img width="1250" height="1019" alt="image" src="https://github.com/user-attachments/assets/f0b3a725-d9d6-4a0e-9316-f67409689d16" />
 
-First created the IAM user and created the access key and got the secret ,on giving the details aws account gets added 
+## First created the IAM user and created the access key and got the secret ,on giving the details aws account gets added 
+
 
 <img width="1257" height="862" alt="image" src="https://github.com/user-attachments/assets/fdd9826d-fda7-4677-8bca-93b44b54893f" />
+
+
 <img width="1256" height="668" alt="image" src="https://github.com/user-attachments/assets/9c6fa211-2710-48c9-b638-12381ecb345b" />
 
-Now I can scan the aws account , on running scan , it will help me detect any idle ec2 instace is there or not and share the findings
+## Now I can scan the aws account , on running scan , it will help me detect any idle ec2 instace is there or not and share the findings
+
+
 <img width="1247" height="757" alt="image" src="https://github.com/user-attachments/assets/2cd302cf-4799-4da6-8f75-87fbb2beb69d" />
 
-Scan history 
+## Scan history
+
+
 <img width="1252" height="412" alt="image" src="https://github.com/user-attachments/assets/61b0515e-9988-4446-94e5-a6f0fb9acea9" />
 
-Findings
+## Findings
+
+
 <img width="1260" height="365" alt="image" src="https://github.com/user-attachments/assets/46843233-cd1d-41bc-87a7-264a38c84f9a" />
 
-Optimisation Opportunity : it will calculate the amount that can be saved if the idel resource is managed properly
+## Optimisation Opportunity : it will calculate the amount that can be saved if the idel resource is managed properly
+
+
 <img width="1235" height="858" alt="image" src="https://github.com/user-attachments/assets/9ddd0fce-1a7a-4936-8e03-638e1a949956" />
+
+## On scaning , when an idle instace is found the registerd person will get notified in slack 
+
+
+<img width="1258" height="457" alt="image" src="https://github.com/user-attachments/assets/8a0b93fb-20aa-442c-bf0d-b1af16499b7c" />
 
 
 
