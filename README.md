@@ -14,13 +14,17 @@ The platform also supports historical scan tracking, findings management, cleanu
 
 ---
 
-User Registration before login
+## User Registration before login
+
+
 
 <img width="1254" height="977" alt="image" src="https://github.com/user-attachments/assets/66c9c0ba-3250-42bf-93d4-77e1b4f92f85" />
 
 <img width="1255" height="1029" alt="image" src="https://github.com/user-attachments/assets/34c2da8f-007c-4bec-be14-3a68e7553f4f" />
 
-User Login after registration
+## User Login after registration
+
+
 
 <img width="1917" height="966" alt="image" src="https://github.com/user-attachments/assets/a6e1ac58-08bc-45ff-af01-f971f5f0fd3a" />
 
