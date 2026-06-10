@@ -339,6 +339,26 @@ npm run dev
 
 ---
 
+User Registration before login
+
+<img width="1254" height="977" alt="image" src="https://github.com/user-attachments/assets/66c9c0ba-3250-42bf-93d4-77e1b4f92f85" />
+
+<img width="1255" height="1029" alt="image" src="https://github.com/user-attachments/assets/34c2da8f-007c-4bec-be14-3a68e7553f4f" />
+
+User Login after registration
+
+<img width="1917" height="966" alt="image" src="https://github.com/user-attachments/assets/a6e1ac58-08bc-45ff-af01-f971f5f0fd3a" />
+
+Dashboard 
+
+<img width="1917" height="973" alt="image" src="https://github.com/user-attachments/assets/5a4bc796-00ba-4659-a1fa-903238e31d5e" />
+
+AWS Console - As it can be seen that there is one idle instance in the aws account 
+
+<img width="1919" height="941" alt="image" src="https://github.com/user-attachments/assets/d534b0e6-ee78-4a24-9fd7-a1aeb2e0fa23" />
+
+
+
 # 🎯 Key Learning Outcomes
 
 Through this project I implemented:
